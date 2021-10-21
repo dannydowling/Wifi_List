@@ -5,63 +5,98 @@ using Wifi_List.Models;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 
-namespace Wifi_List.Helpers
+namespace Wifi_List
 {
     internal class SaveState
     {       
        //add the network names and mac addresses to the preferences file 
-        internal void saveBlockedNetwork(Dictionary<string, object> values)
+        internal void saveFlaggedNetwork(WifiNetwork network)
         {
-            foreach (var item in values)
+            foreach (var item in networks)
             {
-                Preferences.Set(item.Key, item.Value.ToString());
+                Preferences.Set(item.Name, item.MacAddress.ToString());
             }
         }
 
         //remove one Network by name from preferences
-        internal List<string> clearBlockedNetwork(string key)
+        internal List<string> removeOneFlaggedNetwork(string key)
         {
             //make a new place to store the list of blocked networks
-            List<string> blockedList = new List<string>();
+            List<string> result = new List<string>();
 
             //bring down the list as one big horrible string
             //ssid's are allowed to be 32 bytes long. 
             //So we count to 33 to avoid that bug of naming an ssid as the list name.
-            string addedBlock = Preferences.Get("123456789101112131415161718192021222324252627282930313233", "");
+            string addedFlaggedNetwork = Preferences.Get("123456789101112131415161718192021222324252627282930313233", "");
 
             //if it's not empty
-            if (addedBlock != null)
+            if (addedFlaggedNetwork != null)
             {
                 //split it up into columns
-                var columns = addedBlock.Split(',');
+                var columns = addedFlaggedNetwork.Split(',');
 
                 //go over the columns, adding to the list.
                 for (int i = 0; i < columns.Length; i++)
                 {
-                    blockedList.Add(i.ToString());
+                    result.Add(i.ToString());
                 }
 
-                //remove the key from the blocked list
-                blockedList.Remove(key);
+                //remove the key from the flagged list
+                result.Remove(key);
 
                 //re-write the preference file
-                foreach (var item in blockedList)
+                foreach (var item in result)
                 {
                     Preferences.Set("123456789101112131415161718192021222324252627282930313233", item.ToString());
                 }
                
             }            
 
-            //outside of the list of network names only, keyed by "blockedList", retrieve the actual blocked network
-            retrieveBlockedNetwork(key, "");
+            //this is getting the actual network information and not just the name of one.
+            retrieveSingleFlaggedNetwork(key, "");
 
-            //and clear that from preferences
+            //clear that network from preferences cache
             Preferences.Clear(key);
 
-            return blockedList;
+            //return the new list of network names without the one that was cleared.
+            return result;
         }
 
-        internal WifiNetwork retrieveBlockedNetwork(string key, string valueString)
+        //get all the networks added as flagged
+        internal List<WifiNetwork> retrieveAllFlaggedNetworks()
+        {
+            //first create an array of information
+            List<WifiNetwork []> result = new List<WifiNetwork[]>();
+              var columns =  Preferences.Get("123456789101112131415161718192021222324252627282930313233", "").Split(',');
+           
+            //go through the comma delimited values and create new wifi networks of them
+           foreach (var item in columns)
+            {
+                result.Add(new WifiNetwork{
+                    Name = columns[0],
+                    MacAddress = columns[1],
+                    Flagged = columns[2]
+                });
+            }              
+            
+           //return that list of networks
+            return result
+        }
+
+        //get a list of the network names, for use in the UI
+        internal List<string> retrieveAllFlaggedNetworkNames()
+        {
+            var networkList = retrieveAllFlaggedNetworks();
+            List<string> result = new List<string>();
+            foreach (var item in networkList)
+	        {
+                result.Add(item.Name.ToString());
+	        }
+
+            return result;
+        }
+
+        internal WifiNetwork retrieveSingleFlaggedNetwork(string key, string valueString)
         {
             string mess = Preferences.Get(key,valueString);
             if (mess == null) { Console.WriteLine("key not found"); }

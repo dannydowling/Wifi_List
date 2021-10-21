@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Wifi_List.Models
+namespace Wifi_List
 {
     public class WifiNetwork
     {

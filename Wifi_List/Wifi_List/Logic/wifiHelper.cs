@@ -10,13 +10,13 @@ namespace Wifi_List
 {
    public class WifiHelper
     {
-        internal async Task<List<string>> GetWifiListAsync()
+        internal async Task<List<WifiNetwork>> GetWifiListAsync()
         {
 
-            List<string> wifiNetworks = new List<string>();
+            List<WifiNetwork> wifiNetworks = new List<WifiNetwork>();
             Sandwych.SmartConfig.SmartConfigArguments args = new Sandwych.SmartConfig.SmartConfigArguments();
            await SmartConfigStarter.StartAsync<EspSmartConfigProvider>(args, onDeviceDiscovered: (s, e) => 
-           wifiNetworks.Add(string.Format("Found device: IP={0}    MAC={1}", e.Device.IPAddress, e.Device.MacAddress)));
+           wifiNetworks.Add(new WifiNetwork{Name = e.Device.IPAddress.ToString(), MacAddress = e.Device.MacAddress.ToString()}));
            
            return wifiNetworks;
         }
