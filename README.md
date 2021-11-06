@@ -1,4 +1,3 @@
 # Wifi_List
-Making a thing to flag wifi connections as a sign of trouble.
-
-Might be useful, such as if the person approaching has a device that is recognized and you would prefer the opportunity to choose to see them.
+When you are near a person and can see their device, you could flag it to warn as nearby in future.
+It should give up to 30 meters of notification.
