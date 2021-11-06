@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
-using Wifi_List.Models;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 
@@ -10,13 +10,43 @@ namespace Wifi_List
     internal class SaveState
     {       
        //add the network names and mac addresses to the preferences file 
-        internal void saveFlaggedNetwork(WifiNetwork network)
+        internal void saveFlaggedNetwork(string filename, WifiNetwork[] networks)
         {
-            foreach (var item in networks)
+
+            EnumeratedNetworks networksFromFile;
+
+            foreach (var network in networks)
             {
-                Preferences.Set(item.Name, item.MacAddress.ToString());
+                if (File.Exists(filename))
+                {
+                    using (Stream file = File.OpenRead(filename))
+                    {
+                        networks = EnumeratedNetworks.Parser.ParseFrom(file);
+                        
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("{0}: File not found. Creating a new file.", filename);
+                    networksFromFile = new EnumeratedNetworks();
+                }
+
+                networksFromFile.Add(networks);
             }
+
+            if (filename == String.Empty)
+            {
+                string flaggedNetworksFile = "networks.data";
+                // Write the new network enumeration back to disk.
+                using (Stream output = File.OpenWrite(flaggedNetworksFile))
+                {
+                    networksFromFile.WriteTo(output);
+                }
+            } 
+           
         }
+
+
 
         //remove one Network by name from preferences
         internal List<string> removeOneFlaggedNetwork(string key)

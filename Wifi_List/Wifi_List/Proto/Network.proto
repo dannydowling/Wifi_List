@@ -1,0 +1,17 @@
+﻿syntax = "proto3";
+package Wifi_List;
+
+option csharp_namespace = "Wifi_List.Network";
+
+message Network {
+	string Name = 1; // the friendly name of the network
+    int32 id = 2;  // Unique ID number for this network.
+    string MacAddress = 2; 
+    bool Flagged = 3; // if the network triggers an event
+    string Message = 4; // what the event says in eventargs
+}
+
+    message EnumeratedNetworks {
+        repeated Network networks = 1;
+    }
+}
