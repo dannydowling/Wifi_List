@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using Wifi_List.Network;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 
@@ -107,10 +108,10 @@ namespace Wifi_List
                     MacAddress = columns[1],
                     Flagged = columns[2]
                 });
-            }              
-            
-           //return that list of networks
-            return result
+            }
+
+            //return that list of networks
+            return result;
         }
 
         //get a list of the network names, for use in the UI

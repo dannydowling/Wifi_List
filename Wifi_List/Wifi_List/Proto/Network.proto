@@ -4,14 +4,21 @@ package Wifi_List;
 option csharp_namespace = "Wifi_List.Network";
 
 message Network {
-	string Name = 1; // the friendly name of the network
-    int32 id = 2;  // Unique ID number for this network.
-    string MacAddress = 2; 
-    bool Flagged = 3; // if the network triggers an event
-    string Message = 4; // what the event says in eventargs
-}
+		string name = 1; 	// the name of the remote person
+		int32 id = 2;  		// Unique ID number for this person.  	
+				
+message MacAddress {
+		string macaddress = 1;	
+		int32 macid = 2;
+		    }
 
-    message EnumeratedNetworks {
-        repeated Network networks = 1;
-    }
-}
+repeated MacAddress macaddresses = 3;	// third in the network type is a set of addresses
+
+		bool flagged = 4; 	// if the network triggers an event
+		string warning = 5; 	// what the event says in eventargs
+		
+		}
+
+message EnumeratedNetworks {
+        repeated Network networks = 1;    
+			    }
