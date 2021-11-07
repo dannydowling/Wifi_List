@@ -1,4 +1,5 @@
 ﻿using Google.Protobuf;
+using Google.Protobuf.Collections;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -10,40 +11,38 @@ using Xamarin.Forms;
 namespace Wifi_List
 {
     internal class SaveState
-    {
+    {       
+
         internal void Internal_Save_Network_As_Flagged(string filename, Network[] networks)
         {
+            EnumeratedNetworks openedFileStream;
 
-            EnumeratedNetworks networksFromFile;
-
-            foreach (Network network in networks)
+            if (filename == String.Empty)
             {
-                if (File.Exists(filename))
-                {
-                    using (Stream file = File.OpenRead(filename))
-                    {
-                        networksFromFile = EnumeratedNetworks.Parser.ParseFrom(file);
-                    }
-                }
-                else
-                {
-                    Console.WriteLine("{0}: File not found. Creating a new file.", filename);
-                    networksFromFile = new EnumeratedNetworks();
-                }
+               filename = "networks.data";
+            }
 
-                networksFromFile.MergeFrom(EnumeratedNetworks.Parser.ParseFrom(network.ToByteArray()));
+            //This is the protobuf concrete class of repeated network classes
+            using (Stream file = File.OpenRead(filename))
+            {
+                openedFileStream = EnumeratedNetworks.Parser.ParseFrom(file);
+            }
+            
+            RepeatedField<Network> additions = new RepeatedField<Network>();
+            additions.AddRange(networks);
+
+            RepeatedField<Network> existingNetworks = new RepeatedField<Network>();
+            var networkList = Internal_Get_All_Flagged_Networks(filename);
+            existingNetworks.AddRange(networkList);
+
+            //we now have a set of old and a set of new.
+
+            existingNetworks.AddRange(additions);
 
 
-                if (filename == String.Empty)
-                {
-                    string flaggedNetworksFile = "networks.data";
-
-                    using (Stream output = File.OpenWrite(flaggedNetworksFile))
-                    {
-                        networksFromFile.WriteTo(output);
-                    }
-                }
-
+            using (Stream output = File.OpenWrite(filename))
+            {
+                openedFileStream.WriteTo(output);
             }
         }
         public List<Network> Internal_Get_All_Flagged_Networks(string filename)
@@ -109,7 +108,7 @@ namespace Wifi_List
             {
                 Internal_Remove_Network_As_Flagged(network.Name);
                 Internal_Save_Network_As_Flagged("networks.data", networks);
-            }            
+            }
         }
     }
 }
