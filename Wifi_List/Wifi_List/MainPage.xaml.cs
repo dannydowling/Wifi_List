@@ -19,13 +19,13 @@ namespace Wifi_List
         public MainPage()
         {
             //wifiHelper goes out and gets the info
-            var wifiHelper = new WifiHelper();
+            var wifiHelper = new UI_Networks_Scanner();
 
             //saveState stores information in preferences cache
             var saveState = new SaveState();
 
             //loads up a library and gets a list of networks that can be seen
-            var wifiSource = wifiHelper.GetWifiListAsync();
+            var wifiSource = wifiHelper.UI_List_Visible_Networks();
 
             //checks preferences to retrieve the list of flagged networks store
             var flaggedListSource = saveState.retrieveAllFlaggedNetworkNames();

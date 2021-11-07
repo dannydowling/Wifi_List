@@ -16,9 +16,9 @@ namespace Wifi_List
 
     public void CheckNetworkNamesForMatches()
     {
-        WifiHelper wifiHelper = new WifiHelper();
+        UI_Networks_Scanner wifiHelper = new UI_Networks_Scanner();
         var networkNames = new List<WifiNetwork>();
-            networkNames = wifiHelper.GetWifiListAsync().Result;
+            networkNames = wifiHelper.UI_List_Visible_Networks().Result;
 
         SaveState saveState = new SaveState();
         var flaggedNetworks = saveState.retrieveAllFlaggedNetworks();
