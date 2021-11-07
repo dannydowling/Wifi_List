@@ -4,16 +4,13 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using Xamarin.Essentials;
-using Xamarin.Forms;
 
 namespace Wifi_List
 {
-    internal class SaveState
+    internal class NetworksCRUD
     {       
 
-        internal void Internal_Save_Network_As_Flagged(string filename, Network[] networks)
+        internal void Internal_Save_Networks_That_Are_Flagged(string filename, Network[] networks)
         {
             EnumeratedNetworks openedFileStream;
 
@@ -21,8 +18,7 @@ namespace Wifi_List
             {
                filename = "networks.data";
             }
-
-            //This is the protobuf concrete class of repeated network classes
+            
             using (Stream file = File.OpenRead(filename))
             {
                 openedFileStream = EnumeratedNetworks.Parser.ParseFrom(file);
