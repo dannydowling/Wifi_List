@@ -9,7 +9,7 @@ using pb = global::Google.Protobuf;
 using pbc = global::Google.Protobuf.Collections;
 using pbr = global::Google.Protobuf.Reflection;
 using scg = global::System.Collections.Generic;
-namespace Wifi_List.Network {
+namespace Wifi_List {
 
   /// <summary>Holder for reflection information generated from Network.proto</summary>
   public static partial class NetworkReflection {
@@ -29,13 +29,13 @@ namespace Wifi_List.Network {
             "aWZpX0xpc3QuTmV0d29yay5NYWNBZGRyZXNzEg8KB2ZsYWdnZWQYBCABKAgS",
             "DwoHd2FybmluZxgFIAEoCRovCgpNYWNBZGRyZXNzEhIKCm1hY2FkZHJlc3MY",
             "ASABKAkSDQoFbWFjaWQYAiABKAUiOgoSRW51bWVyYXRlZE5ldHdvcmtzEiQK",
-            "CG5ldHdvcmtzGAEgAygLMhIuV2lmaV9MaXN0Lk5ldHdvcmtCFKoCEVdpZmlf",
-            "TGlzdC5OZXR3b3JrYgZwcm90bzM="));
+            "CG5ldHdvcmtzGAEgAygLMhIuV2lmaV9MaXN0Lk5ldHdvcmtCDKoCCVdpZmlf",
+            "TGlzdGIGcHJvdG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::Wifi_List.Network.Network), global::Wifi_List.Network.Network.Parser, new[]{ "Name", "Id", "Macaddresses", "Flagged", "Warning" }, null, null, null, new pbr::GeneratedClrTypeInfo[] { new pbr::GeneratedClrTypeInfo(typeof(global::Wifi_List.Network.Network.Types.MacAddress), global::Wifi_List.Network.Network.Types.MacAddress.Parser, new[]{ "Macaddress", "Macid" }, null, null, null, null)}),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Wifi_List.Network.EnumeratedNetworks), global::Wifi_List.Network.EnumeratedNetworks.Parser, new[]{ "Networks" }, null, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::Wifi_List.Network), global::Wifi_List.Network.Parser, new[]{ "Name", "Id", "Macaddresses", "Flagged", "Warning" }, null, null, null, new pbr::GeneratedClrTypeInfo[] { new pbr::GeneratedClrTypeInfo(typeof(global::Wifi_List.Network.Types.MacAddress), global::Wifi_List.Network.Types.MacAddress.Parser, new[]{ "Macaddress", "Macid" }, null, null, null, null)}),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Wifi_List.EnumeratedNetworks), global::Wifi_List.EnumeratedNetworks.Parser, new[]{ "Networks" }, null, null, null, null)
           }));
     }
     #endregion
@@ -56,7 +56,7 @@ namespace Wifi_List.Network {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Wifi_List.Network.NetworkReflection.Descriptor.MessageTypes[0]; }
+      get { return global::Wifi_List.NetworkReflection.Descriptor.MessageTypes[0]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -122,15 +122,15 @@ namespace Wifi_List.Network {
 
     /// <summary>Field number for the "macaddresses" field.</summary>
     public const int MacaddressesFieldNumber = 3;
-    private static readonly pb::FieldCodec<global::Wifi_List.Network.Network.Types.MacAddress> _repeated_macaddresses_codec
-        = pb::FieldCodec.ForMessage(26, global::Wifi_List.Network.Network.Types.MacAddress.Parser);
-    private readonly pbc::RepeatedField<global::Wifi_List.Network.Network.Types.MacAddress> macaddresses_ = new pbc::RepeatedField<global::Wifi_List.Network.Network.Types.MacAddress>();
+    private static readonly pb::FieldCodec<global::Wifi_List.Network.Types.MacAddress> _repeated_macaddresses_codec
+        = pb::FieldCodec.ForMessage(26, global::Wifi_List.Network.Types.MacAddress.Parser);
+    private readonly pbc::RepeatedField<global::Wifi_List.Network.Types.MacAddress> macaddresses_ = new pbc::RepeatedField<global::Wifi_List.Network.Types.MacAddress>();
     /// <summary>
     /// third in the network type is a set of addresses
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public pbc::RepeatedField<global::Wifi_List.Network.Network.Types.MacAddress> Macaddresses {
+    public pbc::RepeatedField<global::Wifi_List.Network.Types.MacAddress> Macaddresses {
       get { return macaddresses_; }
     }
 
@@ -400,7 +400,7 @@ namespace Wifi_List.Network {
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
         [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public static pbr::MessageDescriptor Descriptor {
-          get { return global::Wifi_List.Network.Network.Descriptor.NestedTypes[0]; }
+          get { return global::Wifi_List.Network.Descriptor.NestedTypes[0]; }
         }
 
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -631,7 +631,7 @@ namespace Wifi_List.Network {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Wifi_List.Network.NetworkReflection.Descriptor.MessageTypes[1]; }
+      get { return global::Wifi_List.NetworkReflection.Descriptor.MessageTypes[1]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -663,12 +663,12 @@ namespace Wifi_List.Network {
 
     /// <summary>Field number for the "networks" field.</summary>
     public const int NetworksFieldNumber = 1;
-    private static readonly pb::FieldCodec<global::Wifi_List.Network.Network> _repeated_networks_codec
-        = pb::FieldCodec.ForMessage(10, global::Wifi_List.Network.Network.Parser);
-    private readonly pbc::RepeatedField<global::Wifi_List.Network.Network> networks_ = new pbc::RepeatedField<global::Wifi_List.Network.Network>();
+    private static readonly pb::FieldCodec<global::Wifi_List.Network> _repeated_networks_codec
+        = pb::FieldCodec.ForMessage(10, global::Wifi_List.Network.Parser);
+    private readonly pbc::RepeatedField<global::Wifi_List.Network> networks_ = new pbc::RepeatedField<global::Wifi_List.Network>();
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public pbc::RepeatedField<global::Wifi_List.Network.Network> Networks {
+    public pbc::RepeatedField<global::Wifi_List.Network> Networks {
       get { return networks_; }
     }
 

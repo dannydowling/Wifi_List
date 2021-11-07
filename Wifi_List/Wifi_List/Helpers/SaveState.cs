@@ -1,29 +1,28 @@
-﻿using System;
+﻿using Google.Protobuf;
+using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
-using Wifi_List.Network;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 
 namespace Wifi_List
 {
     internal class SaveState
-    {       
-       //add the network names and mac addresses to the preferences file 
-        internal void saveFlaggedNetwork(string filename, WifiNetwork[] networks)
+    {
+        internal void Internal_Save_Network_As_Flagged(string filename, Network[] networks)
         {
 
             EnumeratedNetworks networksFromFile;
 
-            foreach (var network in networks)
+            foreach (Network network in networks)
             {
                 if (File.Exists(filename))
                 {
                     using (Stream file = File.OpenRead(filename))
                     {
-                        networks = EnumeratedNetworks.Parser.ParseFrom(file);
-                        
+                        networksFromFile = EnumeratedNetworks.Parser.ParseFrom(file);
                     }
                 }
                 else
@@ -32,120 +31,85 @@ namespace Wifi_List
                     networksFromFile = new EnumeratedNetworks();
                 }
 
-                networksFromFile.Add(networks);
+                networksFromFile.MergeFrom(EnumeratedNetworks.Parser.ParseFrom(network.ToByteArray()));
+
+
+                if (filename == String.Empty)
+                {
+                    string flaggedNetworksFile = "networks.data";
+
+                    using (Stream output = File.OpenWrite(flaggedNetworksFile))
+                    {
+                        networksFromFile.WriteTo(output);
+                    }
+                }
+
+            }
+        }
+        public List<Network> Internal_Get_All_Flagged_Networks(string filename)
+        {
+            if (filename == null)
+                filename = "networks.data";
+
+            if (!File.Exists(filename))
+            {
+                Console.WriteLine("{0} doesn't exist. Add a person to create the file first.", filename);
             }
 
-            if (filename == String.Empty)
+            List<Network> result = new List<Network>();
+
+            using (Stream stream = File.OpenRead(filename))
             {
-                string flaggedNetworksFile = "networks.data";
-                // Write the new network enumeration back to disk.
-                using (Stream output = File.OpenWrite(flaggedNetworksFile))
-                {
-                    networksFromFile.WriteTo(output);
-                }
-            } 
-           
+                EnumeratedNetworks networks = EnumeratedNetworks.Parser.ParseFrom(stream);
+                result.AddRange(networks.Networks);
+            }
+            return result;
         }
 
-
-
-        //remove one Network by name from preferences
-        internal List<string> removeOneFlaggedNetwork(string key)
+        internal List<string> UI_Update_Flagged_Network_Names()
         {
-            //make a new place to store the list of blocked networks
+            var networkList = Internal_Get_All_Flagged_Networks("networks.data");
             List<string> result = new List<string>();
-
-            //bring down the list as one big horrible string
-            //ssid's are allowed to be 32 bytes long. 
-            //So we count to 33 to avoid that bug of naming an ssid as the list name.
-            string addedFlaggedNetwork = Preferences.Get("123456789101112131415161718192021222324252627282930313233", "");
-
-            //if it's not empty
-            if (addedFlaggedNetwork != null)
+            foreach (Network network in networkList)
             {
-                //split it up into columns
-                var columns = addedFlaggedNetwork.Split(',');
+                result.Add(network.Name.ToString());
+            }
+            return result;
+        }
 
-                //go over the columns, adding to the list.
-                for (int i = 0; i < columns.Length; i++)
-                {
-                    result.Add(i.ToString());
-                }
+        internal Network Internal_Get_Single_Flagged_Network(string Name)
+        {
+            var networkList = Internal_Get_All_Flagged_Networks("networks.data");
+            Network result = networkList.Single(x => x.Name == Name);
 
-                //remove the key from the flagged list
-                result.Remove(key);
+            return result;
+        }
 
-                //re-write the preference file
-                foreach (var item in result)
-                {
-                    Preferences.Set("123456789101112131415161718192021222324252627282930313233", item.ToString());
-                }
-               
+        internal void Internal_Remove_Network_As_Flagged(string Name)
+        {
+            if (Name == null)
+                Console.WriteLine("{0} doesn't exist.", Name);
+
+            var networks = Internal_Get_All_Flagged_Networks("networks.data");
+            Network network = networks.Single(x => x.Name == Name);
+            networks.Remove(network);
+        }
+
+        internal void Internal_Update_Single_Network_In_Flagged(Network network)
+        {
+            Internal_Remove_Network_As_Flagged(network.Name);
+            Network[] networkArray = new Network[0];
+            networkArray[0] = network;
+            Internal_Save_Network_As_Flagged("networks.data", networkArray);
+        }
+
+        internal void Internal_Update_Many_Networks_In_Flagged(Network[] networks)
+        {
+            foreach (Network network in networks)
+            {
+                Internal_Remove_Network_As_Flagged(network.Name);
+                Internal_Save_Network_As_Flagged("networks.data", networks);
             }            
-
-            //this is getting the actual network information and not just the name of one.
-            retrieveSingleFlaggedNetwork(key, "");
-
-            //clear that network from preferences cache
-            Preferences.Clear(key);
-
-            //return the new list of network names without the one that was cleared.
-            return result;
-        }
-
-        //get all the networks added as flagged
-        internal List<WifiNetwork> retrieveAllFlaggedNetworks()
-        {
-            //first create an array of information
-            List<WifiNetwork []> result = new List<WifiNetwork[]>();
-              var columns =  Preferences.Get("123456789101112131415161718192021222324252627282930313233", "").Split(',');
-           
-            //go through the comma delimited values and create new wifi networks of them
-           foreach (var item in columns)
-            {
-                result.Add(new WifiNetwork{
-                    Name = columns[0],
-                    MacAddress = columns[1],
-                    Flagged = columns[2]
-                });
-            }
-
-            //return that list of networks
-            return result;
-        }
-
-        //get a list of the network names, for use in the UI
-        internal List<string> retrieveAllFlaggedNetworkNames()
-        {
-            var networkList = retrieveAllFlaggedNetworks();
-            List<string> result = new List<string>();
-            foreach (var item in networkList)
-	        {
-                result.Add(item.Name.ToString());
-	        }
-
-            return result;
-        }
-
-        internal WifiNetwork retrieveSingleFlaggedNetwork(string key, string valueString)
-        {
-            string mess = Preferences.Get(key,valueString);
-            if (mess == null) { Console.WriteLine("key not found"); }
-
-            var columns = mess.Split(',');
-            var result = new WifiNetwork 
-            {
-                Name = columns[0],
-                MacAddress = columns[1]  
-            };
-
-            if (result != null)
-            {
-                result.Flagged = true;
-            }
-
-            return result;
-
         }
     }
 }

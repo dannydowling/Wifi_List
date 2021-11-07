@@ -1,7 +1,7 @@
 ﻿syntax = "proto3";
 package Wifi_List;
 
-option csharp_namespace = "Wifi_List.Network";
+option csharp_namespace = "Wifi_List";
 
 message Network {
 		string name = 1; 	// the name of the remote person
